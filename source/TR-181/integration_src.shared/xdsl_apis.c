@@ -545,7 +545,7 @@ static ANSC_STATUS DmlXdslSetParamValues( char *pComponent, char *pBus, char *pP
 }
 
 /* * DmlXdslGetLowerLayersInstanceInOtherAgent() */
-static ANSC_STATUS DmlXdslGetLowerLayersInstanceInOtherAgent( XDSL_NOTIFY_ENUM enNotifyAgent, char *pLowerLayers, INT *piInstanceNumber )
+static ANSC_STATUS DmlXdslGetLowerLayersInstanceInOtherAgent( XDSL_NOTIFY_ENUM enNotifyAgent, char *pLowerLayers, ULONG *piInstanceNumber )
 {
     //Validate buffer
     if( ( NULL == pLowerLayers ) || ( NULL == piInstanceNumber ) )
@@ -984,6 +984,7 @@ ANSC_STATUS DmlXdslSetLinkStatusForWanManager( char *BaseInterface, char *LinkSt
     char                       acSetParamName[256] = {'\0'};
     char                       acSetParamValue[256] = {'\0'};
     INT                        iWANInstance   = -1;
+    ULONG                      instanceId     = -1;
 
     //Validate buffer
     if( ( NULL == BaseInterface ) || ( NULL == LinkStatus ) )
@@ -993,7 +994,8 @@ ANSC_STATUS DmlXdslSetLinkStatusForWanManager( char *BaseInterface, char *LinkSt
     }
 
     //Get Instance for corresponding name
-    DmlXdslGetLowerLayersInstanceInOtherAgent( NOTIFY_TO_WAN_AGENT, BaseInterface, &iWANInstance );
+    DmlXdslGetLowerLayersInstanceInOtherAgent( NOTIFY_TO_WAN_AGENT, BaseInterface, &instanceId );
+    iWANInstance = (INT)instanceId;
 
     CcspTraceInfo(("%s %d BaseInterface=[%s] iWANInstance=[%d]\n", __FUNCTION__, __LINE__, BaseInterface, iWANInstance));
     //Index is not present. so no need to do anything any WAN instance
