@@ -738,7 +738,7 @@ Line_SetParamBoolValue
 	{
 	    pXDSLLine->Enable  = bValue;
 	    //Process DSL enable set
-	    DmlXdslLineSetEnable( ( pXDSLLine->ulInstanceNumber - 1 ), pXDSLLine->Enable );
+	    DmlXdslLineSetEnable( ( pXDSLLine->ulInstanceNumber ), pXDSLLine->Enable );
     	}
 
         ret = TRUE;
