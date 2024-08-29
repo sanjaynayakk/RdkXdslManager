@@ -1782,6 +1782,9 @@ int xdsl_hal_dslGetChannelInfo(int channelNo, PDML_XDSL_CHANNEL pstChannelInfo)
                 pstChannelInfo->Status = XDSL_IF_STATUS_Error;
             }
         }
+        else if (strstr (resp_param.name, "Enable")) {
+            pstChannelInfo->Enable = atoi(resp_param.value);
+        }
         else if (strstr (resp_param.name, "LastChange")) {
             pstChannelInfo->LastChange = atoi(resp_param.value);
         }
