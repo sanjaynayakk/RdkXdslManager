@@ -1139,6 +1139,11 @@ static void *StartXdslReporting()
         uDftOverrideTTL = XdslReportGetDefaultOverrideTTL();
         uDftReportingPeriod = XdslReportGetDefaultReportingPeriod();
         uOverrideReportingPeriod = XdslReportGetReportingPeriod();
+        while(!uOverrideReportingPeriod)
+	{
+	    sleep(5);
+	    uOverrideReportingPeriod = XdslReportGetReportingPeriod();
+	}	
         if (uDftOverrideTTL != 0)
         {
             if (uOverrideReportingPeriod == 0)
