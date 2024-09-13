@@ -230,10 +230,15 @@
         { "$ref": "#/definitions/dslLineUpstreamPower" },
         { "$ref": "#/definitions/dslLineDownstreamPower" },
         { "$ref": "#/definitions/dslLineXTURVendor" },
+        { "$ref": "#/definitions/dslLineXTURVersion" },
+        { "$ref": "#/definitions/dslLineXTURSerial" },
         { "$ref": "#/definitions/dslLineXTURCountry" },
         { "$ref": "#/definitions/dslLineXTURANSIStd" },
         { "$ref": "#/definitions/dslLineXTURANSIRev" },
         { "$ref": "#/definitions/dslLineXTUCVendor" },
+        { "$ref": "#/definitions/dslLineXTUCVersion" },
+        { "$ref": "#/definitions/dslLineXTUCSerial" },
+        { "$ref": "#/definitions/dslLineXTUCVendorSpecific" },
         { "$ref": "#/definitions/dslLineXTUCCountry" },
         { "$ref": "#/definitions/dslLineXTUCANSIStd" },
         { "$ref": "#/definitions/dslLineXTUCANSIRev" },
@@ -1438,6 +1443,46 @@
       }
     },
 
+    "dslLineXTURVendorSpecific": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^Device\\.DSL\\.Line\\.\\d+\\.XTURVendorSpecific$"
+        },
+        "type": {
+          "type": "string",
+          "const": "hexBinary"
+        },
+        "value": {
+          "$ref": "#/definitions/typeHex",
+          "minLength": 2,
+          "maxLength": 2
+        }
+      }
+    },
+
+    "dslLineXTURSystemVendorId": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^Device\\.DSL\\.Line\\.\\d+\\.XTURSystemVendorId$"
+        },
+        "type": {
+          "type": "string",
+          "const": "hexBinary"
+        },
+        "value": {
+          "$ref": "#/definitions/typeHex",
+          "minLength": 8,
+          "maxLength": 8
+        }
+      }
+    },
+
     "dslLineXTURCountry": {
       "type": "object",
       "additionalProperties": false,
@@ -1512,6 +1557,86 @@
           "$ref": "#/definitions/typeHex",
           "minLength": 8,
           "maxLength": 8
+        }
+      }
+    },
+
+    "dslLineXTUCSystemVendorId": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^Device\\.DSL\\.Line\\.\\d+\\.XTUCSystemVendorId$"
+        },
+        "type": {
+          "type": "string",
+          "const": "hexBinary"
+        },
+        "value": {
+          "$ref": "#/definitions/typeHex",
+          "minLength": 8,
+          "maxLength": 8
+        }
+      }
+    },
+
+    "dslLineXTUCVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^Device\\.DSL\\.Line\\.\\d+\\.XTUCVersion$"
+        },
+        "type": {
+          "type": "string",
+          "const": "hexBinary"
+        },
+        "value": {
+          "$ref": "#/definitions/typeHex",
+          "minLength": 16,
+          "maxLength": 16
+        }
+      }
+    },
+
+    "dslLineXTUCSerial": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^Device\\.DSL\\.Line\\.\\d+\\.XTUCSerial$"
+        },
+        "type": {
+          "type": "string",
+          "const": "hexBinary"
+        },
+        "value": {
+          "$ref": "#/definitions/typeHex",
+          "minLength": 32,
+          "maxLength": 32
+        }
+      }
+    },
+
+    "dslLineXTUCVendorSpecific": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^Device\\.DSL\\.Line\\.\\d+\\.XTUCVendorSpecific$"
+        },
+        "type": {
+          "type": "string",
+          "const": "hexBinary"
+        },
+        "value": {
+          "$ref": "#/definitions/typeHex",
+          "minLength": 2,
+          "maxLength": 2
         }
       }
     },

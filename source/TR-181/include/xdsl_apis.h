@@ -45,6 +45,8 @@
 
 
 #define XDSL_STANDARD_USED_STR_MAX          64
+#define SYSTEM_VENDOR_ID_LENGTH             16
+#define BEGINNING_INDEX                     4
 
 typedef enum
 _DML_XDSL_LINE_TYPE
@@ -253,12 +255,27 @@ _DML_XDSL_LINE
     INT                               DownstreamAttenuation;
     INT                               DownstreamNoiseMargin;
     INT                               DownstreamPower;
+    CHAR                              XTURSerial[33];
+    CHAR                              XTURVersion[17];
     CHAR                              XTURVendor[9];
+    CHAR                              XTURSystemCountry[5];
+    CHAR                              XTURSystemVendor[9];
+    CHAR                              XTURVendorSpecific[5];
+    CHAR                              XTURSystemVendorSpecific[5];
     CHAR                              XTURCountry[5];
     UINT                              XTURANSIStd;
     UINT                              XTURANSIRev;
     CHAR                              XTUCVendor[9];
+    CHAR                              XTUCVersion[33];
+    CHAR                              XTUCSerial[33];
+    CHAR                              XTUCSystemVendorId[17];
+    CHAR                              XTUCVersionNumber[17];
+    CHAR                              XTUCSerialNumber[33];
+    CHAR                              XTUCVendorSpecific[5];
+    CHAR                              XTUCSystemVendor[9];
+    CHAR                              XTUCSystemVendorSpecific[5];
     CHAR                              XTUCCountry[5];
+    CHAR                              XTUCSystemCountry[5];
     UINT                              XTUCANSIStd;
     UINT                              XTUCANSIRev;
     DML_XDSL_LINE_STATS               stLineStats;

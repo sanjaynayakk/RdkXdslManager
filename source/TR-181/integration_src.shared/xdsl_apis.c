@@ -104,6 +104,11 @@
 //XDSL
 #define XDSL_LINE_ENABLE "Device.DSL.Line.%d.Enable"
 #define XDSL_LINE_DATA_GATHERING_ENABLE "Device.DSL.Line.%d.EnableDataGathering"
+#define XDSL_LINE_XTURVERSION  "Device.DSL.Line.%d.XTURVersion"
+#define XDSL_LINE_XTURSERIAL   "Device.DSL.Line.%d.XTURSerial"
+#define MAX_XTURVERSION_LENGTH 17
+#define MAX_XTURSERIAL_LENGTH 33
+#define MAX_STRING_SIZE   64
 
 /* *********************************************************************** */
 //Global Declaration
@@ -116,6 +121,7 @@ extern char * XdslReportStatusDfltReportingPeriod;
 extern char * XdslReportStatusReportingPeriod;
 
 static ANSC_STATUS DmlXdslGetLineStaticInfo( INT LineIndex, PDML_XDSL_LINE pstLineInfo );
+static ANSC_STATUS DmlXdslSetLineInfo( INT LineIndex);
 static ANSC_STATUS DmlXdslGetParamValues( char *pComponent, char *pBus, char *pParamName, char *pReturnVal );
 static ANSC_STATUS DmlXdslSetParamValues( char *pComponent, char *pBus, char *pParamName, char *pParamVal, enum dataType_e type, BOOLEAN bCommit );
 static ANSC_STATUS DmlXdslGetParamNames( char *pComponent, char *pBus, char *pParamName, char a2cReturnVal[][256], int *pReturnSize );
@@ -244,6 +250,7 @@ DmlXdslLineInit
         pXDSLLineTmp[iLoopCount].ulInstanceNumber   = iLoopCount + 1;
 
         DmlXdslGetLineStaticInfo( iLoopCount, &pXDSLLineTmp[iLoopCount] );
+	DmlXdslSetLineInfo( iLoopCount);
     }
 
     //Assign the memory address to oringinal structure
@@ -275,6 +282,46 @@ static ANSC_STATUS DmlXdslGetLineStaticInfo( INT LineIndex, PDML_XDSL_LINE pstLi
 
     //As of now hardcoded
     snprintf( pstLineInfo->StandardsSupported, sizeof(pstLineInfo->StandardsSupported), "%s", "G.992.1_Annex_A, G.992.1_Annex_B, G.992.1_Annex_C, T1.413, G.992.2, G.992.3_Annex_A, G.992.3_Annex_B, G.992.3_Annex_C, G.993.1, G.993.1_Annex_A, G.993.2_Annex_B, G.993.2_Annex_C" );
+
+    return ANSC_STATUS_SUCCESS;
+}
+
+/* DmlXdslSetLineInfo() */
+static ANSC_STATUS DmlXdslSetLineInfo( INT LineIndex)
+{
+    char fName[ANSC_MAX_STRING_SIZE] = {0} , Model[ANSC_MAX_STRING_SIZE] = {0}, Serial[ANSC_MAX_STRING_SIZE] = {0};
+
+    if (platform_hal_GetSerialNumber(Serial) == RETURN_OK )
+    {
+        /* collect value*/
+        if (platform_hal_GetFirmwareName(fName, ANSC_MAX_STRING_SIZE) == RETURN_OK )
+        {
+            if (platform_hal_GetModelName(Model) == RETURN_OK )
+            {
+                hal_param_t set_param;
+
+                /* XTURVersion in BCM Level */
+                memset(&set_param, 0, sizeof(set_param));
+                set_param.type = PARAM_STRING;
+                snprintf(set_param.name, sizeof(set_param.name), XDSL_LINE_XTURVERSION, LineIndex + 1);
+                snprintf(set_param.value,MAX_XTURVERSION_LENGTH,"%s %s",fName,Model);
+                xtm_hal_setLinkInfoParam(&set_param);
+
+                /* XTURSerial in BCM */
+                memset(&set_param, 0, sizeof(set_param));
+                set_param.type = PARAM_STRING;
+                snprintf(set_param.name, sizeof(set_param.name), XDSL_LINE_XTURSERIAL, LineIndex + 1);
+                snprintf(set_param.value,MAX_XTURSERIAL_LENGTH,"%s %s %s",Serial, Model, fName);
+                xtm_hal_setLinkInfoParam(&set_param);
+            }
+            else
+                return ANSC_STATUS_FAILURE;
+        }
+        else
+            return ANSC_STATUS_FAILURE;
+    }
+    else
+        return ANSC_STATUS_FAILURE;
 
     return ANSC_STATUS_SUCCESS;
 }

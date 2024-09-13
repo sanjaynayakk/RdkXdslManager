@@ -1032,16 +1032,74 @@ int xdsl_hal_dslGetLineInfo(int lineNo, PDML_XDSL_LINE pstLineInfo)
             snprintf(pstLineInfo->SNRMpbds, sizeof(pstLineInfo->SNRMpbds), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTURVendor")) {
-            snprintf(pstLineInfo->XTURVendor, sizeof(pstLineInfo->XTURVendor), "%s", resp_param.value);
+            char node[64] = {0};
+            sscanf(resp_param.name,"%*[^.].%*[^.].%*[^.].%*[^.].%64s",node);
+
+            if (strcmp (node,"XTURVendor") == 0)
+            {
+                snprintf(pstLineInfo->XTURVendor, sizeof(pstLineInfo->XTURVendor), "%s", resp_param.value);
+            }
+            else if (strcmp (node, "XTURVendorSpecific") == 0 ) {
+                snprintf(pstLineInfo->XTURVendorSpecific, sizeof(pstLineInfo->XTURVendorSpecific), "%s", resp_param.value);
+            }
+        }
+        else if (strstr (resp_param.name, "XTURSystemCountry")) {
+            snprintf(pstLineInfo->XTURSystemCountry, sizeof(pstLineInfo->XTURSystemCountry), "%s", resp_param.value);
+        }
+        else if (strstr (resp_param.name, "XTURSystemVendor")) {
+            char node[64] = {0};
+            sscanf(resp_param.name,"%*[^.].%*[^.].%*[^.].%*[^.].%64s",node);
+
+            if (strcmp (node, "XTURSystemVendor") == 0) {
+                snprintf(pstLineInfo->XTURSystemVendor, sizeof(pstLineInfo->XTURSystemVendor), "%s", resp_param.value);
+            }
+            else if (strcmp (node, "XTURSystemVendorSpecific") == 0) {
+                snprintf(pstLineInfo->XTURSystemVendorSpecific, sizeof(pstLineInfo->XTURSystemVendorSpecific), "%s", resp_param.value);
+            }
         }
         else if (strstr (resp_param.name, "XTURCountry")) {
             snprintf(pstLineInfo->XTURCountry, sizeof(pstLineInfo->XTURCountry), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTUCVendor")) {
-            snprintf(pstLineInfo->XTUCVendor, sizeof(pstLineInfo->XTUCVendor), "%s", resp_param.value);
+            char node[64] = {0};
+            sscanf(resp_param.name,"%*[^.].%*[^.].%*[^.].%*[^.].%64s",node);
+
+            if (strcmp (node,"XTUCVendor") == 0)
+            {
+                snprintf(pstLineInfo->XTUCVendor, sizeof(pstLineInfo->XTUCVendor), "%s", resp_param.value);
+            }
+            else if (strcmp (node, "XTUCVendorSpecific") == 0) {
+                snprintf(pstLineInfo->XTUCVendorSpecific, sizeof(pstLineInfo->XTUCVendorSpecific), "%s", resp_param.value);
+            }
+        }
+        else if (strstr (resp_param.name, "XTUCSystemVendor")) {
+            char node[64] = {0};
+            sscanf(resp_param.name,"%*[^.].%*[^.].%*[^.].%*[^.].%64s",node);
+
+            if (strcmp (node, "XTUCSystemVendor") == 0) {
+                snprintf(pstLineInfo->XTUCSystemVendor, sizeof(pstLineInfo->XTUCSystemVendor), "%s", resp_param.value);
+            }
+            else if (strcmp (node, "XTUCSystemVendorSpecific") == 0) {
+                snprintf(pstLineInfo->XTUCSystemVendorSpecific, sizeof(pstLineInfo->XTUCSystemVendorSpecific), "%s", resp_param.value);
+            }
+        }
+        else if (strstr (resp_param.name, "XTURVersion")) {
+            snprintf(pstLineInfo->XTURVersion, sizeof(pstLineInfo->XTURVersion), "%s", resp_param.value);
+        }
+        else if (strstr (resp_param.name, "XTURSerial")) {
+            snprintf(pstLineInfo->XTURSerial, sizeof(pstLineInfo->XTURSerial), "%s", resp_param.value);
+        }
+        else if (strstr (resp_param.name, "XTUCVersion")) {
+            snprintf(pstLineInfo->XTUCVersion, sizeof(pstLineInfo->XTUCVersion), "%s", resp_param.value);
+        }
+        else if (strstr (resp_param.name, "XTUCSerial")) {
+            snprintf(pstLineInfo->XTUCSerial, sizeof(pstLineInfo->XTUCSerial), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "XTUCCountry")) {
             snprintf(pstLineInfo->XTUCCountry, sizeof(pstLineInfo->XTUCCountry), "%s", resp_param.value);
+        }
+        else if (strstr (resp_param.name, "XTUCSystemCountry")) {
+            snprintf(pstLineInfo->XTUCSystemCountry, sizeof(pstLineInfo->XTUCSystemCountry), "%s", resp_param.value);
         }
         else if (strstr (resp_param.name, "UPBOKLEPb")) {
             snprintf(pstLineInfo->UPBOKLEPb, sizeof(pstLineInfo->UPBOKLEPb), "%s", resp_param.value);
@@ -2142,8 +2200,8 @@ ANSC_STATUS xtm_hal_setLinkInfoParam(hal_param_t *set_param)
     /**
      * XTM Link Enable/Disable
      */
-    json_object *jreply_msg;
-    json_object *jrequest;
+    json_object *jreply_msg = NULL;
+    json_object *jrequest = NULL;
     int rc = ANSC_STATUS_FAILURE;
     json_bool status = FALSE;
 
@@ -2534,6 +2592,12 @@ static json_object *create_json_request_message(eActionType request_type, const 
                 strncpy(stParam.value, "false", sizeof(stParam.value));
             }
             json_hal_add_param(jrequest, SET_REQUEST_MESSAGE, &stParam);
+            break;
+        case PARAM_STRING:
+            {
+                strncpy(stParam.value, param_val, sizeof(stParam.value));
+                json_hal_add_param(jrequest, SET_REQUEST_MESSAGE, &stParam);
+            }
             break;
         }
         break;

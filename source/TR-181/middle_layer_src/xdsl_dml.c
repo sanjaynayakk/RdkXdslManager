@@ -529,6 +529,35 @@ Line_GetParamStringValue
            ret = 1;
        }
     }
+    else if( AnscEqualString(ParamName, "XTURVersion", TRUE) )
+    {
+       /* collect value*/
+       if ( ( sizeof( pXDSLLine->XTURVersion ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTURVersion );
+           ret = 0;
+
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTURVendor );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURSerial", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTURSerial ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTURSerial );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTURSerial );
+           ret = 1;
+       }
+    }
     else if (strcmp(ParamName, "XTUCVendor") == 0)
     {
        /* collect value */
@@ -540,6 +569,90 @@ Line_GetParamStringValue
        else
        {
            *pUlSize = sizeof( pXDSLLine->XTUCVendor );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTUCSystemVendor", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTUCSystemVendor ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTUCSystemVendor );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTUCSystemVendor );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTUCSystemVendorSpecific", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTUCSystemVendorSpecific ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTUCSystemVendorSpecific );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTUCSystemVendorSpecific );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTUCSystemCountry", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTUCSystemCountry ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTUCSystemCountry );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTUCSystemCountry );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTUCVersion", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTUCVersion ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTUCVersion );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTUCVersion );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTUCSerial", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTUCSerial ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTUCSerial );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTUCSerial );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTUCVendorSpecific", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTUCVendorSpecific ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTUCVendorSpecific );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTUCVendorSpecific );
            ret = 1;
        }
     }
@@ -610,6 +723,92 @@ Line_GetParamStringValue
        else
        {
            *pUlSize = sizeof( pXDSLLine->XTSE );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURVendorSpecific", TRUE) )
+    {
+       /* collect value*/
+       if ( ( sizeof( pXDSLLine->XTURVendorSpecific ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString( pValue, pXDSLLine->XTURVendorSpecific );
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof( pXDSLLine->XTURVendorSpecific );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURSystemVendorId", TRUE) )
+    {
+       /* collect value */
+       int length = sizeof (pXDSLLine->XTURSystemCountry) + sizeof(pXDSLLine->XTURSystemVendor) + sizeof(pXDSLLine->XTURSystemVendorSpecific);
+       if ( ( length ) < *pUlSize )
+       {
+           snprintf(pValue, *pUlSize, "%s%s%s", pXDSLLine->XTURSystemCountry, pXDSLLine->XTURSystemVendor, pXDSLLine->XTURSystemVendorSpecific);
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = length;
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURVendorId", TRUE) )
+    {
+       /* collect value */
+       int length = sizeof (pXDSLLine->XTURCountry) + sizeof(pXDSLLine->XTURVendor) + sizeof(pXDSLLine->XTURVendorSpecific);
+       if ( ( length ) < *pUlSize )
+       {
+           snprintf(pValue, *pUlSize, "%s%s%s", pXDSLLine->XTURCountry, pXDSLLine->XTURVendor, pXDSLLine->XTURVendorSpecific);
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = length;
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURSystemVendor", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTURSystemVendor ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString(pValue, pXDSLLine->XTURSystemVendor);
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof(  pXDSLLine->XTURSystemVendor );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURSystemVendorSpecific", TRUE) )
+    {
+       /* collect value*/
+       if ( ( sizeof( pXDSLLine->XTURSystemVendorSpecific ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString(pValue, pXDSLLine->XTURSystemVendorSpecific);
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof(  pXDSLLine->XTURSystemVendorSpecific );
+           ret = 1;
+       }
+    }
+    else if( AnscEqualString(ParamName, "XTURSystemCountry", TRUE) )
+    {
+       /* collect value */
+       if ( ( sizeof( pXDSLLine->XTURSystemCountry ) - 1 ) < *pUlSize )
+       {
+           AnscCopyString(pValue, pXDSLLine->XTURSystemCountry);
+           ret = 0;
+       }
+       else
+       {
+           *pUlSize = sizeof(  pXDSLLine->XTURSystemCountry );
            ret = 1;
        }
     }

@@ -344,8 +344,48 @@
             </parameter>
             <parameter>
               <name>XTURVendor</name>
-              <type>string(9)</type>
+              <type>hexBinary(4:4)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURVersion</name>
+              <type>string(17)</type>
               <syntax>string</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURSerial</name>
+              <type>string(33)</type>
+              <syntax>string</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURVendorId</name>
+              <type>hexBinary(8:8)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURSystemVendorId</name>
+              <type>hexBinary(8:8)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURVendorSpecific</name>
+              <type>hexBinary(2:2)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURSystemVendor</name>
+              <type>hexBinary(4:4)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURSystemVendorSpecific</name>
+              <type>hexBinary(2:2)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTURSystemCountry</name>
+              <type>hexBinary(2:2)</type>
+              <syntax>hexBinary</syntax>
             </parameter>
             <parameter>
               <name>XTURCountry</name>
@@ -366,6 +406,36 @@
               <name>XTUCVendor</name>
               <type>string(9)</type>
               <syntax>string</syntax>
+            </parameter>
+            <parameter>
+              <name>XTUCVersion</name>
+              <type>hexBinary(16:16)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTUCSerial</name>
+              <type>string(33)</type>
+              <syntax>string</syntax>
+            </parameter>
+            <parameter>
+              <name>XTUCVendorSpecific</name>
+              <type>hexBinary(2:2)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTUCSystemVendor</name>
+              <type>hexBinary(4:4)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTUCSystemVendorSpecific</name>
+              <type>hexBinary(2:2)</type>
+              <syntax>hexBinary</syntax>
+            </parameter>
+            <parameter>
+              <name>XTUCSystemCountry</name>
+              <type>hexBinary(2:2)</type>
+              <syntax>hexBinary</syntax>
             </parameter>
             <parameter>
               <name>XTUCCountry</name>

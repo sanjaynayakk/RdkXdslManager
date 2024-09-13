@@ -30,4 +30,4 @@ libXdslManagermiddle_layer_src_la_CPPFLAGS = \
 
 libXdslManagermiddle_layer_src_la_SOURCES = plugin_main.c plugin_main_apis.c xdsl_dml.c xdsl_internal.c xtm_dml.c xtm_internal.c
 
-libXdslManagermiddle_layer_src_la_LDFLAGS = -lccsp_common -lcm_mgnt
+libXdslManagermiddle_layer_src_la_LDFLAGS = -lccsp_common -lcm_mgnt -lhal_platform
