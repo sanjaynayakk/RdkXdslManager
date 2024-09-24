@@ -38,6 +38,9 @@
 #include "plugin_main_apis.h"
 #include "sys_definitions.h"
 #include "xdsl_hal.h"
+#include "ccsp_psm_helper.h"
+
+extern ANSC_STATUS DmlAtmInit(ANSC_HANDLE hDml, PANSC_HANDLE phContext);
 
 /**********************************************************************
 
