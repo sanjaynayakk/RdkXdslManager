@@ -314,7 +314,7 @@ static avro_writer_t prepare_rt_writer()
         {
             CcspTraceInfo(("XDSL REPORT %s : LINE %d \n", __FUNCTION__, __LINE__));
             perror(XDSL_AVRO_SCHEMA_FILE " doesn't exist.");
-            CcspTraceInfo(("%s file does'nt exist\n", XDSL_AVRO_SCHEMA_FILE));
+            CcspTraceError(("%s file does'nt exist\n", XDSL_AVRO_SCHEMA_FILE));
         }
         CcspTraceInfo(("XDSL REPORT %s : LINE %d \n", __FUNCTION__, __LINE__));
 
@@ -335,7 +335,7 @@ static avro_writer_t prepare_rt_writer()
         {
             fclose(fp);
             fputs("memory alloc fails", stderr);
-            CcspTraceInfo(("Unable to allocate memory\n"));
+            CcspTraceError(("Unable to allocate memory\n"));
             return NULL;
         }
         CcspTraceInfo(("XDSL REPORT %s : LINE %d \n", __FUNCTION__, __LINE__));
@@ -347,7 +347,7 @@ static avro_writer_t prepare_rt_writer()
             CcspTraceInfo(("XDSL REPORT %s : LINE %d rt_schema_buffer = %p\n", __FUNCTION__, __LINE__, rt_schema_buffer));
             free(rt_schema_buffer);
             fputs("entire read fails", stderr);
-            CcspTraceInfo(("fread() failed\n"));
+            CcspTraceError(("fread() failed\n"));
             return NULL;
         }
 
@@ -366,7 +366,7 @@ static avro_writer_t prepare_rt_writer()
 
         if (CHK_AVRO_ERR)
         {
-            CcspTraceInfo(("%s %s : %d avro_schema_from_json fail:\n", avro_strerror(), __func__, __LINE__));
+            CcspTraceError(("%s %s : %d avro_schema_from_json fail:\n", avro_strerror(), __func__, __LINE__));
             return NULL;
         }
         CcspTraceInfo(("XDSL REPORT %s : LINE %d xdsl_report_schema = %p\n", __FUNCTION__, __LINE__, xdsl_report_schema));
@@ -375,7 +375,7 @@ static avro_writer_t prepare_rt_writer()
         iface = avro_generic_class_from_schema(xdsl_report_schema);
         if (CHK_AVRO_ERR)
         {
-            CcspTraceInfo(("%s iface = %p\n", avro_strerror(), iface));
+            CcspTraceError(("%s iface = %p\n", avro_strerror(), iface));
             return NULL;
         }
         CcspTraceInfo(("XDSL REPORT %s : LINE %d \n", __FUNCTION__, __LINE__));
@@ -437,7 +437,7 @@ static int harvester_report_Xdsl(XdslReportData *head)
     avro_generic_value_new(iface, &adr);
     if (CHK_AVRO_ERR)
     {
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
         return 1;
     }
     CcspTraceInfo(("XDSL Report\tType: %d\n", avro_value_get_type(&adr)));
@@ -446,11 +446,11 @@ static int harvester_report_Xdsl(XdslReportData *head)
     // timestamp
     avro_value_get_by_name(&adr, "header", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
     avro_value_get_by_name(&adrField, "timestamp", &adrField, NULL);
     avro_value_set_branch(&adrField, 1, &optional);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d \n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d \n", avro_strerror(), __LINE__));
 
     struct timeval ts;
     gettimeofday(&ts, NULL);
@@ -470,31 +470,31 @@ static int harvester_report_Xdsl(XdslReportData *head)
 
     avro_value_get_by_name(&adr, "header", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s __LINE__\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s __LINE__\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "uuid", &adrField, NULL);
     avro_value_set_branch(&adrField, 1, &optional);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_fixed(&optional, transaction_id, 16);
     unsigned char *ptxn = (unsigned char *)transaction_id;
     CcspTraceInfo(("uuid = 0x%02X, 0x%02X ... 0x%02X, 0x%02X\n", ptxn[0], ptxn[1], ptxn[14], ptxn[15]));
     CcspTraceInfo(("uuid\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d \n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d \n", avro_strerror(), __LINE__));
 
     //source
     avro_value_get_by_name(&adr, "header", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d \n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d \n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "source", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 0, &optional);
     avro_value_set_string(&optional, ReportSource);
     CcspTraceInfo(("source = \"%s\"\n", ReportSource));
     CcspTraceInfo(("source\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
 
     //cpe_id block
     // MacAddress
@@ -517,7 +517,7 @@ static int harvester_report_Xdsl(XdslReportData *head)
     }
     avro_value_get_by_name(&adr, "cpe_id", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "mac_address", &adrField, NULL);
     if (CHK_AVRO_ERR)
         CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
@@ -535,48 +535,48 @@ static int harvester_report_Xdsl(XdslReportData *head)
         CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "cpe_type", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d \n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d \n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 0, &optional);
     avro_value_set_string(&optional, CPE_TYPE_STRING);
     CcspTraceInfo(("cpe_type = \"%s\"\n", CPE_TYPE_STRING));
     CcspTraceInfo(("cpe_type\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
 
     //Data Field block
     // XTSUsed
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "XTSUsed", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_string(&optional, ptr->XTSUsed);
     CcspTraceInfo(("XTSUsed\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // DownstreamCurrRate
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "DownstreamCurrRate", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->DownstreamCurrRate);
     CcspTraceInfo(("DownstreamCurrRate\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // UpstreamCurrRate
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "UpstreamCurrRate", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->UpstreamCurrRate);
     CcspTraceInfo(("UpstreamCurrRate\tType: %d\n", avro_value_get_type(&optional)));
@@ -586,366 +586,366 @@ static int harvester_report_Xdsl(XdslReportData *head)
     // CurrentDayStart
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayStart", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->CurrentDayStart);
     CcspTraceInfo(("CurentDayStart\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // QuarterHourXTUCCRCErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "QuarterHourXTUCCRCErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->QuarterHourXTUCCRCErrors);
     CcspTraceInfo(("QuarterHourXTUCCRCErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayXTURCRCErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayXTURCRCErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayXTURCRCErrors);
     CcspTraceInfo(("CurrentDayXTURCRCErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // QuarterHourXTURCRCErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "QuarterHourXTURCRCErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->QuarterHourXTURCRCErrors);
     CcspTraceInfo(("QuarterHourXTURCRCErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // StandardUsed - string
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "StandardUsed", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_string(&optional, ptr->StandardUsed);
     CcspTraceInfo(("StandardUsed\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // DownstreamAttenuation
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "DownstreamAttenuation", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_double(&optional, (double)ptr->DownstreamAttenuation);
     CcspTraceInfo(("DownstreamAttenuation\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // DownstreamMaxBitRate
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "DownstreamMaxBitRate", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->DownstreamMaxBitRate);
     CcspTraceInfo(("DownstreamMaxBitRate\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // DownstreamNoiseMargin
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "DownstreamNoiseMargin", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_double(&optional, (double)ptr->DownstreamNoiseMargin);
     CcspTraceInfo(("DownstreamNoiseMargin\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // DownstreamPower
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "DownstreamPower", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_double(&optional, (double)ptr->DownstreamPower);
     CcspTraceInfo(("DownstreamPower\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayXTUCCRCErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayXTUCCRCErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayXTUCCRCErrors);
     CcspTraceInfo(("CurrentDayXTUCCRCErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayXTUCFECErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayXTUCFECErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayXTUCFECErrors);
     CcspTraceInfo(("CurrentDayXTUCFECErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayXTUCHECErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayXTUCHECErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayXTUCHECErrors);
     CcspTraceInfo(("CurrentDayXTUCHECErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayErroredSecs
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayErroredSecs", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayErroredSecs);
     CcspTraceInfo(("CurrentDayErroredSecs\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayXTURFECErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayXTURFECErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayXTURFECErrors);
     CcspTraceInfo(("CurrentDayXTURFECErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayXTURHECErrors
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayXTURHECErrors", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDayXTURHECErrors);
     CcspTraceInfo(("CurrentDayXTURHECErrors\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDaySeverelyErroredSecs
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDaySeverelyErroredSecs", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_int(&optional, ptr->CurrentDaySeverelyErroredSecs);
     CcspTraceInfo(("CurrentDaySeverelyErroredSecs\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // UpstreamAttenuation
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "UpstreamAttenuation", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_double(&optional, (double)ptr->UpstreamAttenuation);
     CcspTraceInfo(("UpstreamAttenuation\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // UpstreamMaxBitRate
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "UpstreamMaxBitRate", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->UpstreamMaxBitRate);
     CcspTraceInfo(("UpstreamMaxBitRate\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // UpstreamNoiseMargin
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "UpstreamNoiseMargin", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_double(&optional, (double)ptr->UpstreamNoiseMargin);
     CcspTraceInfo(("UpstreamNoiseMargin\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // UpstreamPower
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "UpstreamPower", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_double(&optional, (double)ptr->UpstreamPower);
     CcspTraceInfo(("UpstreamPower\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // Upstream
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-    if ( CHK_AVRO_ERR ) CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "Upstream", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_boolean(&optional, ptr->Upstream);
     CcspTraceInfo(("Upstream\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // TotalStart
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "TotalStart", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->TotalStart);
     CcspTraceInfo(("TotalStart\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // QuarterHourStart
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "QuarterHourStart", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->QuarterHourStart);
     CcspTraceInfo(("QuarterHourStart\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // AllowedProfiles
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "AllowedProfiles", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_string(&optional, ptr->AllowedProfiles);
     CcspTraceInfo(("AllowedProfiles\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentProfile - string
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentProfile", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_string(&optional, ptr->CurrentProfile);
     CcspTraceInfo(("CurrentProfile\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // CurrentDayLinkRetrain
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "CurrentDayLinkRetrain", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->CurrentDayLinkRetrain);
     CcspTraceInfo(("CurrentDayLinkRetrain\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // QuarterHourLinkRetrain
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "QuarterHourLinkRetrain", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->QuarterHourLinkRetrain);
     CcspTraceInfo(("QuarterHourLinkRetrain\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
     // EchotoNoiseRatio
     avro_value_get_by_name(&adr, "data", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_get_by_name(&adrField, "EchotoNoiseRatio", &adrField, NULL);
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s LINE %d\n", avro_strerror(), __LINE__));
+        CcspTraceError(("%s LINE %d\n", avro_strerror(), __LINE__));
     avro_value_set_branch(&adrField, 1, &optional);
     avro_value_set_long(&optional, (long)ptr->EchotoNoiseRatio);
     CcspTraceInfo(("EchotoNoiseRatio\tType: %d\n", avro_value_get_type(&optional)));
     if (CHK_AVRO_ERR)
-        CcspTraceInfo(("%s\n", avro_strerror()));
+        CcspTraceError(("%s\n", avro_strerror()));
 
 
     /* check for writer size, if buffer is almost full, skip trailing linklist */
@@ -1064,7 +1064,7 @@ static void WaitForPthreadConditionTimeout(ULONG waitingPeriod)
     }
     else if (n != ETIMEDOUT)
     {
-        CcspTraceInfo(("XDSL REPORT %s : pthread_cond_timedwait ERROR(%d)!!!. %s \n", __FUNCTION__, n, strerror(n)));
+        CcspTraceError(("XDSL REPORT %s : pthread_cond_timedwait ERROR(%d)!!!. %s \n", __FUNCTION__, n, strerror(n)));
     }
 
     pthread_mutex_unlock(&XdslReportMutex);
@@ -1095,7 +1095,8 @@ static int PrepareAndSendXdslReport()
 
     if (DmlXdslGetLineLinkStatus(line_id + 1, &link_status) == ANSC_STATUS_FAILURE)
     {
-	    return ANSC_STATUS_FAILURE;
+        CcspTraceError(("%s - %d : Failed to get DSL Link Status\n", __FUNCTION__, __LINE__));
+	return ANSC_STATUS_FAILURE;
     }
 
     AnscTraceInfo(("%s-%d: TotalLines=%d, TotalChannels=%d \n", __FUNCTION__, __LINE__, iTotalLines, iTotalChannels));
@@ -1107,18 +1108,18 @@ static int PrepareAndSendXdslReport()
         ret = XdslPrepareReportData(line_id, iTotalChannels, &ptr);
         if (ret)
         {
-            CcspTraceWarning(("XdslReportGetData returned error [%d] \n", ret));
+            CcspTraceError(("XdslReportGetData returned error [%d] \n", ret));
         }
 
         ret = harvester_report_Xdsl(&ptr);
         if (ret)
         {
-            CcspTraceWarning(("harvester_report_Xdsl returned error [%d] \n", ret));
+            CcspTraceError(("harvester_report_Xdsl returned error [%d] \n", ret));
         }
         return ret;
     }
     else{
-        CcspTraceInfo(("Dsl Link is down, not sending xdsl report \n"));
+        CcspTraceError(("Dsl Link is down, not sending xdsl report \n"));
         return ret;
     }
 }
@@ -1247,7 +1248,7 @@ int XdslReportSetStatus(BOOL status)
 
         if (pthread_create(&tid, NULL, XdslReportingThread, NULL))
         {
-            CcspTraceWarning(("XDSL REPORT %s : Failed to Start Thread to start XDSL Harvesting  \n", __FUNCTION__));
+            CcspTraceError(("XDSL REPORT %s : Failed to Start Thread to start XDSL Harvesting  \n", __FUNCTION__));
             return ANSC_STATUS_FAILURE;
         }
     }
@@ -1264,7 +1265,7 @@ int XdslReportSetStatus(BOOL status)
         }
         else
         {
-            CcspTraceInfo(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
+            CcspTraceError(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
         }
     }
     CcspTraceInfo(("XDSL REPORT %s : EXIT \n", __FUNCTION__));
@@ -1299,7 +1300,7 @@ int XdslReportSetReportingPeriod(ULONG interval)
     }
     else
     {
-        CcspTraceInfo(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
+        CcspTraceError(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
     }
     return 0;
 }
@@ -1329,7 +1330,7 @@ int XdslReportSetDefaultReportingPeriod(ULONG interval)
     }
     else
     {
-        CcspTraceInfo(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
+        CcspTraceError(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
     }
     return 0;
 }
@@ -1361,7 +1362,7 @@ int XdslReportSetDefaultOverrideTTL(ULONG interval)
     }
     else
     {
-        CcspTraceInfo(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
+        CcspTraceError(("XDSL REPORT %s : pthread_cond_signal fail\n", __FUNCTION__));
     }
     return 0;
 }
@@ -1376,7 +1377,7 @@ int _syscmd(char *cmd, char *retBuf, int retBufSize)
 
     if ((f = popen(cmd, "r")) == NULL)
     {
-        CcspTraceInfo((" XDSL REPORT %s : popen %s error\n", __FUNCTION__, cmd));
+        CcspTraceError((" XDSL REPORT %s : popen %s error\n", __FUNCTION__, cmd));
         return -1;
     }
 

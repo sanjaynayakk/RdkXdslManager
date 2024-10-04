@@ -53,7 +53,7 @@ static void get_parodus_url(char **url)
 
     get_seshat_url(&seshat_url);
     if( NULL == seshat_url ) {
-        CcspTraceWarning((" seshat_url is not present in device.properties file\n"));
+        CcspTraceError((" seshat_url is not present in device.properties file\n"));
         return;
     }
 
@@ -69,14 +69,14 @@ static void get_parodus_url(char **url)
             CcspTraceInfo(("XDSL REPORT %s : LINE %d free()\n", __FUNCTION__,  __LINE__));
             free(discovered_url);
         } else {
-            CcspTraceWarning((" seshatlib registration error (url %s)!", discovered_url));
+            CcspTraceError((" seshatlib registration error (url %s)!", discovered_url));
         }
     } else {
-        CcspTraceWarning((" seshatlib not initialized! (url %s)\n", seshat_url));
+        CcspTraceError((" seshatlib not initialized! (url %s)\n", seshat_url));
     }
 
     if( NULL == *url ) {
-        CcspTraceWarning((" parodus url (url %s) is not present in seshatlib (url %s)\n", *url, seshat_url));
+        CcspTraceError((" parodus url (url %s) is not present in seshatlib (url %s)\n", *url, seshat_url));
     }
     CcspTraceInfo((" parodus url formed is %s\n", *url));
 
@@ -107,7 +107,7 @@ static void get_seshat_url(char **url)
             }
         }
     } else {
-        CcspTraceWarning((" Failed to open device.properties file:%s\n", DEVICE_PROPS_FILE));
+        CcspTraceError((" Failed to open device.properties file:%s\n", DEVICE_PROPS_FILE));
     }
     fclose(fp);
 }
@@ -128,7 +128,7 @@ static void get_parodus_url(char **url)
             }
         }
     } else {
-        CcspTraceWarning((" Failed to open device.properties file:%s\n", DEVICE_PROPS_FILE));
+        CcspTraceError((" Failed to open device.properties file:%s\n", DEVICE_PROPS_FILE));
         CcspTraceInfo(("Adding default value for parodus_url\n"));
         *url = strdup(PARODUS_URL_DEFAULT);
     }
@@ -167,7 +167,7 @@ int ParodusClientInit()
     get_parodus_url(&parodus_url);
     if(parodus_url == NULL)
     {
-        CcspTraceInfo((" Cannot retrieve parodus url \n"));
+        CcspTraceError((" Cannot retrieve parodus url \n"));
         return ANSC_STATUS_FAILURE;
     }
     libpd_cfg_t cfg1 = {.service_name = "xdsl",
@@ -198,7 +198,7 @@ int ParodusClientInit()
         }
         else
         {
-            CcspTraceWarning((" Init for parodus (url %s) failed: '%s'\n", parodus_url, libparodus_strerror(ret)));
+            CcspTraceError((" Init for parodus (url %s) failed: '%s'\n", parodus_url, libparodus_strerror(ret)));
             if( NULL == parodus_url )
             {
                 get_parodus_url(&parodus_url);
@@ -210,7 +210,7 @@ int ParodusClientInit()
         retval = libparodus_shutdown(client_instance);
         CcspTraceInfo((" libparodus_shutdown retval: %d\n", retval));
     }
-    CcspTraceInfo((" libparodus_init failure \n"));
+    CcspTraceError((" libparodus_init failure \n"));
     return ANSC_STATUS_FAILURE;
 }
 
@@ -283,7 +283,7 @@ void sendWebpaMsg(char *serviceName, char *dest, char *trans_id, char *contentTy
             }
             else
             {
-                CcspTraceWarning((" Failed to send message: '%s', retrying ....\n",libparodus_strerror(sendStatus)));
+                CcspTraceError((" Failed to send message: '%s', retrying ....\n",libparodus_strerror(sendStatus)));
                 CcspTraceInfo((" backoffRetryTime %d seconds\n", backoffRetryTime));
                 sleep(backoffRetryTime);
                 c++;

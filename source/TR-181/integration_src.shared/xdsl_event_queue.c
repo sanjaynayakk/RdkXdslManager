@@ -229,7 +229,7 @@ void DmlXdslTriggerEventHandlerThread( void )
 
     if( 0 != iErrorCode )
     {
-        CcspTraceInfo(("%s %d - Failed to start Event Handler Thread EC:%d\n", __FUNCTION__, __LINE__, iErrorCode ));
+        CcspTraceError(("%s %d - Failed to start Event Handler Thread EC:%d\n", __FUNCTION__, __LINE__, iErrorCode ));
     }
     else
     {

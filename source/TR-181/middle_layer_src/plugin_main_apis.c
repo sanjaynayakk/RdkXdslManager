@@ -131,6 +131,7 @@ BackEndManagerCreate
 
     if ( !pMyObject )
     {
+        CcspTraceError(("%s - %d : Invalid Memory\n", __FUNCTION__, __LINE__));
         return  (ANSC_HANDLE)NULL;
     }
 

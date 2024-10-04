@@ -103,6 +103,7 @@ COSA_Init
     if ( uMaxVersionSupported < THIS_PLUGIN_VERSION )
     {
       /* this version is not supported */
+        CcspTraceError(("%s - %d : Version not Supported\n", __FUNCTION__, __LINE__));
         return -1;
     }   
     
@@ -512,6 +513,7 @@ COSA_Unload
     else
     {
         /* print error trace*/
+        CcspTraceError(("%s - %d Failed to remove API from Backend\n", __FUNCTION__, __LINE__));
         g_pBEManager = NULL;
     }
 }

@@ -224,7 +224,7 @@ int xdsl_hal_init( void )
 
     if (is_client_connected != TRUE)
     {
-        CcspTraceInfo(("Failed to connect to the hal server. \n"));
+        CcspTraceError(("Failed to connect to the hal server. \n"));
         return RETURN_ERR;
     }
 
@@ -275,6 +275,7 @@ int xdsl_hal_dslGetLineEnable( hal_param_t *req_param )
     memset(&resp_param, 0, sizeof(resp_param));
     if (json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -291,6 +292,7 @@ int xdsl_hal_dslGetLineEnable( hal_param_t *req_param )
 
     if(jresponse_msg == NULL)
     {
+        CcspTraceError(("%s -%d : Json Response message is NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -298,6 +300,7 @@ int xdsl_hal_dslGetLineEnable( hal_param_t *req_param )
     rc = json_hal_get_param(jresponse_msg, 0, GET_RESPONSE_MESSAGE, &resp_param);
     if (rc != RETURN_OK)
     {
+        CcspTraceError(("%s - %d : Failed to get Parameters from Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jresponse_msg);
         return RETURN_ERR;
@@ -332,6 +335,7 @@ int xdsl_hal_dslGetLineStandardUsed( hal_param_t *req_param, int line_index)
     memset(&resp_param, 0, sizeof(resp_param));
     if (json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -340,6 +344,7 @@ int xdsl_hal_dslGetLineStandardUsed( hal_param_t *req_param, int line_index)
 
     if( json_hal_client_send_and_get_reply(jmsg, &jresponse_msg) != RETURN_OK)
     {
+        CcspTraceError(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jresponse_msg);
         return RETURN_ERR;
@@ -347,6 +352,7 @@ int xdsl_hal_dslGetLineStandardUsed( hal_param_t *req_param, int line_index)
 
     if(jresponse_msg == NULL)
     {
+        CcspTraceError(("%s - %d : JSON Response message is NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -354,6 +360,7 @@ int xdsl_hal_dslGetLineStandardUsed( hal_param_t *req_param, int line_index)
     rc = json_hal_get_param(jresponse_msg, 0, GET_RESPONSE_MESSAGE, &resp_param);
     if (rc != RETURN_OK)
     {
+        CcspTraceError(("%s - %d : Failed to get Parameters from HAL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jresponse_msg);
         return RETURN_ERR;
@@ -442,13 +449,14 @@ int xdsl_hal_dslSetLineEnableDataGathering(hal_param_t *req_msg)
     CcspTraceInfo(("%s-%d: JSON Request message = %s \n", __FUNCTION__, __LINE__, json_object_to_json_string_ext(jmsg, JSON_C_TO_STRING_PRETTY)));
     if( json_hal_client_send_and_get_reply(jmsg, &jreply_msg) != RETURN_OK )
     {
-        CcspTraceInfo(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
+        CcspTraceError(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
     }
 
     if(jreply_msg == NULL) {
+	CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -632,6 +640,7 @@ static ANSC_STATUS xtse_get_bit_position(char *StandardUsed, int *bit_position, 
      }
      else
      {
+          CcspTraceError(("%s - %d : Invalid bit position\n", __FUNCTION__, __LINE__));
           return ANSC_STATUS_FAILURE;
      }
 }
@@ -676,6 +685,7 @@ static ANSC_STATUS compare_with_standards_supported( char *standardsSupported, c
     }
     else
     {
+        CcspTraceError(("%s - %d : Does not match with Stanadards\n", __FUNCTION__, __LINE__));
         return ANSC_STATUS_FAILURE;
     }
 }
@@ -705,6 +715,7 @@ static ANSC_STATUS xdsl_hal_setXtsUsed(char *standardUsed, char *xtsUsedBuf, int
     }
     else
     {
+       CcspTraceError(("%s - %d Failed to set XTSE\n", __FUNCTION__,  __LINE__));
        return ANSC_STATUS_FAILURE;
     }
 }
@@ -805,7 +816,9 @@ int xdsl_hal_dslGetLineInfo(int lineNo, PDML_XDSL_LINE pstLineInfo)
         return RETURN_ERR;
     }
 
-    if(jreply_msg == NULL) {
+    if(jreply_msg == NULL)
+    {
+        CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -817,7 +830,9 @@ int xdsl_hal_dslGetLineInfo(int lineNo, PDML_XDSL_LINE pstLineInfo)
         total_param_count = json_object_array_length(jparams);
     }
 
-    if(jparams == NULL) {
+    if(jparams == NULL)
+    {
+        CcspTraceError(("%s -%d : Json Paramters are NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
@@ -1116,6 +1131,7 @@ ANSC_STATUS xtm_hal_getLinkInfo(int lineNo, PDML_PTM pPtmLink)
     snprintf(req_param.name, sizeof(req_param.name), PTM_LINK_STATUS, lineNo);
     if (json_hal_add_param(jrequest, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jrequest);
         return RETURN_ERR;
     }
@@ -1124,6 +1140,7 @@ ANSC_STATUS xtm_hal_getLinkInfo(int lineNo, PDML_PTM pPtmLink)
     snprintf(req_param.name, sizeof(req_param.name), PTM_LINK_ENABLE, lineNo);
     if (json_hal_add_param(jrequest, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jrequest);
         return RETURN_ERR;
     }
@@ -1176,6 +1193,7 @@ ANSC_STATUS atm_hal_getLinkInfo(int lineNo, PDML_ATM pAtmLink)
     snprintf(req_param.name, sizeof(req_param.name), ATM_LINK_STATUS, lineNo);
     if (json_hal_add_param(jrequest, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jrequest);
         return RETURN_ERR;
     }
@@ -1184,6 +1202,7 @@ ANSC_STATUS atm_hal_getLinkInfo(int lineNo, PDML_ATM pAtmLink)
     snprintf(req_param.name, sizeof(req_param.name), ATM_LINK_ENABLE, lineNo);
     if (json_hal_add_param(jrequest, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jrequest);
         return RETURN_ERR;
     }
@@ -1228,7 +1247,9 @@ static void *eventcb(const char *msg, const int len)
     char event_val[256] = {'\0'};
     int id = 0, n = 0;
 
-    if(msg == NULL) {
+    if(msg == NULL) 
+    {
+        CcspTraceError(("%s - %d : Invalid Message\n", __FUNCTION__, __LINE__));
         return;
     }
 
@@ -1308,7 +1329,7 @@ int xdsl_hal_get_dslLinkStatus()
     memset(&resp_param, 0, sizeof(resp_param));
     for (int line_id = 1; line_id <= XDSL_MAX_LINES; line_id++)
     {
-	    snprintf(paramName, sizeof(paramName), XDSL_LINE_LINKSTATUS, line_id);
+	snprintf(paramName, sizeof(paramName), XDSL_LINE_LINKSTATUS, line_id);
         
         //get info from the hal
         jrequest = create_json_request_message(GET_REQUEST_MESSAGE, paramName, NULL_TYPE , NULL);
@@ -1323,6 +1344,7 @@ int xdsl_hal_get_dslLinkStatus()
         }
         if(jreply_msg == NULL)
         {
+            CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
             FREE_JSON_OBJECT(jrequest);
             return rc;
         }
@@ -1333,6 +1355,7 @@ int xdsl_hal_get_dslLinkStatus()
         }
 
         if(jparams == NULL) {
+            CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
             FREE_JSON_OBJECT(jrequest);
             FREE_JSON_OBJECT(jreply_msg);
             return RETURN_ERR;
@@ -1406,7 +1429,9 @@ int xdsl_hal_dslGetLineStats(int lineNo, PDML_XDSL_LINE_STATS pstLineStats)
     CHECK(jmsg);
 
     snprintf(req_param.name, sizeof(req_param.name), XDSL_LINE_STATS, lineNo);
-    if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK) {
+    if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK) 
+    {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1415,13 +1440,15 @@ int xdsl_hal_dslGetLineStats(int lineNo, PDML_XDSL_LINE_STATS pstLineStats)
 
     if( json_hal_client_send_and_get_reply(jmsg, &jreply_msg) != RETURN_OK)
     {
-        CcspTraceInfo(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
+        CcspTraceError(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
     }
 
-    if(jreply_msg == NULL) {
+    if(jreply_msg == NULL) 
+    {
+        CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1431,7 +1458,9 @@ int xdsl_hal_dslGetLineStats(int lineNo, PDML_XDSL_LINE_STATS pstLineStats)
         total_param_count = json_object_array_length(jparams);
     }
 
-    if(jparams == NULL) {
+    if(jparams == NULL)
+    {
+        CcspTraceError(("%s -%d : Json Paramters are NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
@@ -1565,21 +1594,25 @@ int xdsl_hal_dslGetLineTestParams(int lineNo, PDML_XDSL_LINE_TESTPARAMS pstLineT
     jmsg = json_hal_client_get_request_header(RPC_GET_PARAMETERS_REQUEST);
     CHECK(jmsg);
     snprintf(req_param.name, sizeof(req_param.name), XDSL_LINE_TESTPARAMS, lineNo);
-    if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK) {
+    if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
+    {
+        CcspTraceError(("%s -%d : Failed to add Paramters Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
-       return RETURN_ERR;
+        return RETURN_ERR;
     }
 
 
     if( json_hal_client_send_and_get_reply(jmsg, &jreply_msg) != RETURN_OK)
     {
-        CcspTraceInfo(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
+        CcspTraceError(("[%s][%d] RPC message failed \n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
     }
 
-    if(jreply_msg == NULL) {
+    if(jreply_msg == NULL)
+    {
+        CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1589,7 +1622,9 @@ int xdsl_hal_dslGetLineTestParams(int lineNo, PDML_XDSL_LINE_TESTPARAMS pstLineT
         total_param_count = json_object_array_length(jparams);
     }
 
-    if(jparams == NULL) {
+    if(jparams == NULL)
+    {
+        CcspTraceError(("%s -%d : Json Paramters are NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
@@ -1709,6 +1744,7 @@ int xdsl_hal_dslGetChannelInfo(int channelNo, PDML_XDSL_CHANNEL pstChannelInfo)
     snprintf(req_param.name, sizeof(req_param.name), XDSL_CHANNEL_INFO, channelNo);
     if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1725,6 +1761,7 @@ int xdsl_hal_dslGetChannelInfo(int channelNo, PDML_XDSL_CHANNEL pstChannelInfo)
 
     if(jreply_msg == NULL)
     {
+        CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1736,6 +1773,7 @@ int xdsl_hal_dslGetChannelInfo(int channelNo, PDML_XDSL_CHANNEL pstChannelInfo)
 
     if(jparams == NULL)
     {
+        CcspTraceError(("%s -%d : Json Paramters are NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
@@ -1859,7 +1897,9 @@ int xdsl_hal_dslGetChannelStats(int channelNo, PDML_XDSL_CHANNEL_STATS pstChanne
     CHECK(jmsg);
 
     snprintf(req_param.name, sizeof(req_param.name), XDSL_CHANNEL_STATS, channelNo);
-    if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK) {
+    if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
+    {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1874,7 +1914,9 @@ int xdsl_hal_dslGetChannelStats(int channelNo, PDML_XDSL_CHANNEL_STATS pstChanne
         return RETURN_ERR;
     }
 
-    if(jreply_msg == NULL) {
+    if(jreply_msg == NULL)
+    {
+        CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -1884,7 +1926,9 @@ int xdsl_hal_dslGetChannelStats(int channelNo, PDML_XDSL_CHANNEL_STATS pstChanne
         total_param_count = json_object_array_length(jparams);
     }
 
-    if(jparams == NULL) {
+    if(jparams == NULL)
+    {
+        CcspTraceError(("%s -%d : Json Paramters are NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;
@@ -2083,6 +2127,7 @@ int xdsl_hal_dslGetXRdk_Nlm( PDML_XDSL_X_RDK_NLNM pstNlmInfo )
     snprintf(req_param.name, sizeof(req_param.name), XDSL_NLNM_INFO);
     if( json_hal_add_param(jmsg, GET_REQUEST_MESSAGE, &req_param) != RETURN_OK)
     {
+        CcspTraceError(("%s -%d : Failed to add Parameters to Hal\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -2098,6 +2143,7 @@ int xdsl_hal_dslGetXRdk_Nlm( PDML_XDSL_X_RDK_NLNM pstNlmInfo )
 
     if(jreply_msg == NULL)
     {
+        CcspTraceError(("%s - %d : NULL Json reply message\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         return RETURN_ERR;
     }
@@ -2109,6 +2155,7 @@ int xdsl_hal_dslGetXRdk_Nlm( PDML_XDSL_X_RDK_NLNM pstNlmInfo )
 
     if(jparams == NULL)
     {
+        CcspTraceError(("%s -%d : Json Paramters are NULL\n", __FUNCTION__, __LINE__));
         FREE_JSON_OBJECT(jmsg);
         FREE_JSON_OBJECT(jreply_msg);
         return RETURN_ERR;

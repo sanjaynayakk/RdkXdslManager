@@ -79,6 +79,7 @@ PtmCreate
 
     if ( !pMyObject )
     {
+        CcspTraceError(("%s - %d : Invalid Memory\n", __FUNCTION__, __LINE__));
         return  (ANSC_HANDLE)NULL;
     }
 
@@ -109,6 +110,7 @@ PtmLinkInitialize
 
     if (pPtm->PtmLink == NULL)
     {
+        CcspTraceError(("%s - %d : Invalid Memory\n", __FUNCTION__, __LINE__));
 	return ANSC_STATUS_FAILURE;
     }
 
@@ -234,6 +236,7 @@ AtmLinkInitialize
 
     if (pAtm->AtmLink == NULL)
     {
+        CcspTraceError(("%s - %d : Invalid Memory\n", __FUNCTION__, __LINE__));
 	return ANSC_STATUS_FAILURE;
     }
 
@@ -471,6 +474,7 @@ AtmCreate
 
     if ( !pMyObject )
     {
+        CcspTraceError(("%s - %d : Invalid Memory\n", __FUNCTION__, __LINE__));
         return  (ANSC_HANDLE)NULL;
     }
 

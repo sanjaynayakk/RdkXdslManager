@@ -164,7 +164,7 @@ static void daemonize(void) {
 		break;
 	case -1:
 		// Error
-		CcspTraceInfo(("Error daemonizing (fork)! %d - %s\n", errno, strerror(
+		CcspTraceError(("Error daemonizing (fork)! %d - %s\n", errno, strerror(
 				errno)));
 		exit(0);
 		break;
@@ -173,7 +173,7 @@ static void daemonize(void) {
 	}
 
 	if (setsid() < 	0) {
-		CcspTraceInfo(("Error demonizing (setsid)! %d - %s\n", errno, strerror(errno)));
+		CcspTraceError(("Error demonizing (setsid)! %d - %s\n", errno, strerror(errno)));
 		exit(0);
 	}
 
@@ -289,7 +289,7 @@ int main(int argc, char* argv[])
 	fd = fopen("/var/tmp/xdslmanager.pid", "w+");
     if ( !fd )
     {
-        CcspTraceWarning(("Create /var/tmp/xdslmanager.pid error. \n"));
+        CcspTraceError(("Create /var/tmp/xdslmanager.pid error. \n"));
         return 1;
     }
     else
