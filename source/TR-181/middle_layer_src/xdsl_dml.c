@@ -69,10 +69,14 @@
 #include "xdsl_apis.h"
 #include "xdsl_dml.h"
 #include "xdsl_internal.h"
+#include "xdsl_report.h"
+#include "ccsp_psm_helper.h"
 
 char * XdslReportStatusEnable = "eRT.com.cisco.spvtg.ccsp.xdslmanager.Enabled"; 
 char * XdslReportStatusDfltReportingPeriod = "eRT.com.cisco.spvtg.ccsp.xdslmanager.Default.ReportingPeriod"; 
 char * XdslReportStatusReportingPeriod = "eRT.com.cisco.spvtg.ccsp.xdslmanager.ReportingPeriod"; 
+extern int XdslReportSetDefaultOverrideTTL(ULONG interval);
+extern int XdslReportSetDefaultReportingPeriod(ULONG interval);
 
 extern ANSC_HANDLE                   bus_handle;
 extern char                          g_Subsystem[32];

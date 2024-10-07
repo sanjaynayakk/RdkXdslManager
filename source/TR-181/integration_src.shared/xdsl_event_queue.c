@@ -42,6 +42,9 @@
 
 extern int sysevent_fd;
 
+extern ANSC_HANDLE ATMLink_GetEntry ( ANSC_HANDLE hInsContext, ULONG nIndex, ULONG* pInsNumber );
+extern ANSC_HANDLE PTMLink_GetEntry (ANSC_HANDLE hInsContext,ULONG nIndex,ULONG* pInsNumber);
+
 typedef enum
 _XDSL_MSGQ_MSG_TYPE
 {
