@@ -38,6 +38,8 @@
 
 #define DATAMODEL_PARAM_LENGTH 256
 
+extern ANSC_STATUS atm_hal_startAtmLoopbackDiagnostics(PDML_ATM_DIAG pDiag);
+
 /* * DmlSetPtmIfEnable */
 ANSC_STATUS DmlSetPtmIfEnable (PDML_PTM p_Ptm)
 {

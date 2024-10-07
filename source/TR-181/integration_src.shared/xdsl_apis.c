@@ -76,6 +76,12 @@
 #include <net/if.h>
 
 //Specific includes
+#include "ansc_platform.h"
+#include "xtm_dml.h"
+#include "xtm_apis.h"
+#include "plugin_main_apis.h"
+#include "xtm_internal.h"
+#include "ccsp_psm_helper.h"
 #include "xdsl_apis.h"
 #include "xdsl_hal.h"
 #include "xdsl_internal.h"
