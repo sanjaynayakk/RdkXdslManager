@@ -36,6 +36,7 @@
 #define  _XTM_INTERNAL_H
 
 #include "cosa_apis.h"
+#include "xtm_apis.h"
 /***********************************
     Actual definition declaration
 ************************************/

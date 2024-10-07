@@ -49,6 +49,8 @@ static ULONG XdslReportOverrideTTL = DEFAULT_OVERRIDE_TTL;
 static ULONG CurrentOverrideReportingPeriod = 0;
 extern ANSC_HANDLE bus_handle;
 char deviceMAC[32] = {'\0'};
+extern int xdsl_hal_dslGetXRdk_Nlm(PDML_XDSL_X_RDK_NLNM pstNlmInfo);
+int XdslReportSetDefaultOverrideTTL(ULONG interval);
 
 static pthread_mutex_t XdslReportMutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t XdslReportCond = PTHREAD_COND_INITIALIZER;
@@ -1139,6 +1141,16 @@ static void *StartXdslReporting()
         uDftOverrideTTL = XdslReportGetDefaultOverrideTTL();
         uDftReportingPeriod = XdslReportGetDefaultReportingPeriod();
         uOverrideReportingPeriod = XdslReportGetReportingPeriod();
+        while(!uOverrideReportingPeriod)
+	{
+	    sleep(2);
+	    uOverrideReportingPeriod = XdslReportGetReportingPeriod();
+	}
+	while(!uDftReportingPeriod)
+	{
+	    sleep(2);
+	    uDftReportingPeriod = XdslReportGetDefaultReportingPeriod();
+	}
         if (uDftOverrideTTL != 0)
         {
             if (uOverrideReportingPeriod == 0)
